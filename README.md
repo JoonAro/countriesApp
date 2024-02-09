@@ -28,6 +28,7 @@ Set up your Redux store and create a slice for your countries data. In the slice
 
 Think about the steps carefully here... which part should we do first and why? Do we map and then filter or filter and then map for example?
 Think of your reason...
+Filter and then map
 
 8. Create link container and add in link for single page later (suggested wrapping Card.Img)
    Create a link container component that wraps around each country item. This component should use the Link component from react-router-dom to navigate to a detailed view of the country when clicked. It's suggested to wrap the Card.Img component with this link container.
