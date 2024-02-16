@@ -5,9 +5,13 @@ import Navbar from "react-bootstrap/Navbar";
 import Row from "react-bootstrap/Row";
 import { Link } from "react-router-dom";
 import { logout } from "../auth/firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../auth/firebase";
 
 const Header = () => {
-  return (
+  const [user] = useAuthState(auth);
+
+  return user ? (
     <Container fluid>
       <Row>
         <Navbar bg="light" variant="light">
@@ -24,12 +28,6 @@ const Header = () => {
                 <Link to="/favourites">
                   <Button variant="contained">Favourites</Button>
                 </Link>
-                <Link to="/register">
-                  <Button variant="contained">Register</Button>
-                </Link>
-                <Link to="/login">
-                  <Button variant="contained">Login</Button>
-                </Link>
                 <Button onClick={logout}>Logout</Button>
               </Nav>
             </Navbar.Collapse>
@@ -37,7 +35,25 @@ const Header = () => {
         </Navbar>
       </Row>
     </Container>
-  );
+  ) : (<Container fluid>
+    <Row>
+      <Navbar bg="light" variant="light">
+        <Container className="justify-content-end">
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav>
+              <Link to="/register">
+                <Button variant="contained">Register</Button>
+              </Link>
+              <Link to="/login">
+                <Button variant="contained">Login</Button>
+              </Link>
+            </Nav>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
+    </Row>
+  </Container>);
 };
 
 export default Header;

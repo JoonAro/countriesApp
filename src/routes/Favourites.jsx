@@ -1,16 +1,25 @@
 import { useEffect } from "react";
-
+import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
 import ListGroup from "react-bootstrap/ListGroup";
 import Row from "react-bootstrap/Row";
+import HeartBrokenIcon from '@mui/icons-material/HeartBroken';
 import { useDispatch, useSelector } from "react-redux";
 import { initializeCountries } from "../store/countriesSlice";
+import { removeOneFavourite, clearFavourites } from "../store/favouritesSlice";
 
 const Favourites = () => {
     const dispatch = useDispatch();
 
+    const handleRemoveFavourite = () => {
+        dispatch(removeOneFavourite)
+    }
+
+    const removeAllFavourites = () => {
+        dispatch(clearFavourites());
+    }
     const favourites = useSelector((state) => state.favourites.favourites);
 
     // TODO: Implement logic to retrieve favourites later.
@@ -20,6 +29,7 @@ const Favourites = () => {
 
     return (
         <Container fluid>
+            <Button onClick={() => dispatch(removeAllFavourites())}>Clear Favourites</Button>
             <Row xs={2} md={3} lg={4} className=" g-3">
                 {favourites.map((country) => (
                     <Col key={country.name.official} className="mt-5">
@@ -35,6 +45,9 @@ const Favourites = () => {
                                 }}
                             />
                             <Card.Body className="d-flex flex-column">
+                                <HeartBrokenIcon
+                                    color="red"
+                                    onClick={() => dispatch(removeOneFavourite(country))} />
                                 <Card.Title>{country.name.common}</Card.Title>
                                 <Card.Subtitle className="mb-5 text-muted">
                                     {country.name.official}
