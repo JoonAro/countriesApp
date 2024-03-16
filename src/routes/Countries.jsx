@@ -25,7 +25,7 @@ const Countries = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    console.log("search: ", search);
+    //console.log("search: ", search);
   }, [search]);
 
   if (isLoading) {
@@ -81,7 +81,7 @@ const Countries = () => {
                 <Card.Body className="d-flex flex-column">
                   <FavoriteIcon
                     color="red"
-                    onClick={() => dispatch(addFavourite(country))}
+                    onClick={() => dispatch(addFavourite(country.name.common))}
                   />
                   <Card.Title>{country.name.common}</Card.Title>
                   <Card.Subtitle className="mb-5 text-muted">
@@ -102,6 +102,7 @@ const Countries = () => {
                         .join(", ")}
                     </ListGroup.Item>
                     <ListGroup.Item>
+                      <i className="bi bi-people me-2"></i>
                       {country.population.toLocaleString()}
                     </ListGroup.Item>
                   </ListGroup>
