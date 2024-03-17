@@ -9,13 +9,15 @@ import ListGroup from "react-bootstrap/ListGroup";
 import Row from "react-bootstrap/Row";
 import { useDispatch, useSelector } from "react-redux";
 import { initializeCountries } from "../store/countriesSlice";
-import { addFavourite } from "../store/favouritesSlice";
+import { addFavourite, removeOneFavourite } from "../store/favouritesSlice";
+import { getUserFavourites } from "../auth/firebase";
 import { Link } from "react-router-dom";
 
 const Countries = () => {
   const dispatch = useDispatch();
 
   const countriesList = useSelector((state) => state.countries.countries);
+  const favourites = useSelector((state) => state.favourites.favourites);
   const isLoading = useSelector((state) => state.countries.isLoading);
   const [search, setSearch] = useState("");
 

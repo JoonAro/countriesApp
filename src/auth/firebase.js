@@ -53,15 +53,18 @@ export const addUserFavourite = async (name) => {
         await addDoc(favouritesCollection, { name });
     }
     catch (error) {
-        console.log('add', error)
+        console.log('Error adding favourite to Firebase database: ', error)
     }
 };
 
 export const getUserFavourites = () => async (dispatch) => {
-    const uid = auth.currentUser.uid;
-    const q = await getDocs(collection(db, "users", uid, "favourites"));
-    const favourites = q.docs.map((doc) => doc.data().name);
-    dispatch(getFavourites(favourites));
+    const user = auth.currentUser;
+    const uid = user.uid;
+    if (user) {
+        const q = await getDocs(collection(db, "users", uid, "favourites"));
+        const favourites = q.docs.map((doc) => doc.data().name);
+        dispatch(getFavourites(favourites));
+    }
 };
 
 export const deleteUserFavourite = async (parameter) => {
@@ -69,9 +72,12 @@ export const deleteUserFavourite = async (parameter) => {
     const userDoc = doc(db, "users", uid);
     const favCollection = collection(userDoc, "favourites");
     try {
+        if (!parameter) {
+            console.error("Error removing favourite from Firebase database: name parameter is undefined");
+            return;
+        }
         const userSnapShot = await getDoc(userDoc);
         if (userSnapShot.exists()) {
-            const userData = userSnapShot.data();
             const favSnapshot = await getDocs(favCollection);
             favSnapshot.forEach((doc) => {
                 const favouriteData = doc.data();
@@ -82,10 +88,25 @@ export const deleteUserFavourite = async (parameter) => {
                 }
             })
         }
-        else ("no user data found with uid", uid)
+        else console.error("no user data found with uid", uid)
     }
     catch (error) {
-        console.log(error);
+        console.error("Error removing favourite from Firebase database: ", error);
+    }
+};
+
+export const clearUserFavourites = async () => {
+    const uid = auth.currentUser.uid;
+    const favCollection = collection(db, "users", uid, "favourites");
+    try {
+        const favSnapshot = await getDocs(favCollection);
+        favSnapshot.forEach((doc) => {
+            deleteDoc(doc.ref);
+        })
+        console.log('Deleted favourites from Firebase database');
+    }
+    catch (error) {
+        console.error("Error removing favourites from Firebase database: ", error);
     }
 };
 

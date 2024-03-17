@@ -9,7 +9,7 @@ import HeartBrokenIcon from '@mui/icons-material/HeartBroken';
 import { useDispatch, useSelector } from "react-redux";
 import { initializeCountries } from "../store/countriesSlice";
 import { removeOneFavourite, clearFavourites } from "../store/favouritesSlice";
-import { getUserFavourites } from "../auth/firebase";
+import { auth, getUserFavourites } from "../auth/firebase";
 import { Link } from "react-router-dom";
 
 const Favourites = () => {
@@ -32,7 +32,6 @@ const Favourites = () => {
     } else {
         countriesList = [];
     }
-
     // TODO: Implement logic to retrieve favourites later.
     useEffect(() => {
         dispatch(initializeCountries());
@@ -41,7 +40,7 @@ const Favourites = () => {
 
     return (
         <Container fluid>
-            <Button onClick={() => dispatch(removeAllFavourites())}>Clear Favourites</Button>
+            <Button onClick={() => removeAllFavourites()}>Clear Favourites</Button>
             <Row xs={2} md={3} lg={4} className=" g-3">
                 {countriesList.map((country) => (
                     <Col key={country.name.official} className="mt-5">
