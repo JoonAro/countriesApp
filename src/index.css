@@ -1,4 +1,9 @@
 body {
     background-color: #7a7a7a;
+    /* background-image: url("https://images.unsplash.com/photo-1531266752426-aad472b7bbf4?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"); */
+    /*  background-image: url("https://images.unsplash.com/photo-1512641406448-6574e777bec6?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"); */
+    background-image: url('../public/storm-clouds.jpg');
+    background-size: cover;
+    /* <a href="https://www.freepik.com/free-photo/storm-clouds_1173083.htm#query=black%20white%20clouds&position=49&from_view=keyword&track=ais&uuid=2e916465-b14f-4fe1-b578-80b362d59ccc">Image by freestockcenter</a> on Freepik */
     color: whitesmoke;
 }

@@ -1,26 +1,20 @@
 //5. Connect Countries.jsx to store and replace the countriesList and loading with values from redux.In your Countries.jsx component, connect to the Redux store using the useSelector and useDispatch hooks from react-redux. Replace the local countriesList and loading state with values from the Redux store.
 import { useEffect, useState } from "react";
-import FavoriteIcon from "@mui/icons-material/Favorite";
 import { Spinner, Form } from "react-bootstrap";
-import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
-import ListGroup from "react-bootstrap/ListGroup";
 import Row from "react-bootstrap/Row";
 import { useDispatch, useSelector } from "react-redux";
 import { initializeCountries } from "../store/countriesSlice";
-import { addFavourite, removeOneFavourite } from "../store/favouritesSlice";
-import { getUserFavourites } from "../auth/firebase";
-import { Link } from "react-router-dom";
+import { Grid } from "@mui/material";
+import CountryCard from "../components/CountryCard";
 
 const Countries = () => {
   const dispatch = useDispatch();
 
   const countriesList = useSelector((state) => state.countries.countries);
-  const favourites = useSelector((state) => state.favourites.favourites);
   const isLoading = useSelector((state) => state.countries.isLoading);
   const [search, setSearch] = useState("");
-
 
   useEffect(() => {
     dispatch(initializeCountries());
@@ -47,9 +41,15 @@ const Countries = () => {
 
   return (
     <Container fluid>
-      <Row>
+      <Row style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        margin: "25px 0",
+      }}>
+
         <Form.Control
-          style={{ width: "18rem" }}
+          style={{ width: "18rem", margin: "0", padding: "0" }}
           type="search"
           className="me-2 "
           placeholder="Search for countries"
@@ -57,62 +57,26 @@ const Countries = () => {
           onChange={(e) => setSearch(e.target.value)}
         />
       </Row>
-      <Row xs={2} md={3} lg={4} className=" g-3">
+      <Grid container spacing={3} style={{
+        display: "flex",
+        justifyContent: "flex-start"
+      }}>
+
+
         {countriesList
           .filter((country) =>
             country.name.common.toLowerCase().includes(search.toLowerCase())
           )
           .map((country) => (
-            <Col className="mt-5" key={country.name.official} >
-              <Card className="h-100">
-                <Link
-                  to={`/countries/${country.name.common}`}
-                  state={{ country: country }}
-                >
-                  <Card.Img
-                    variant="top"
-                    className="rounded h-50"
-                    src={country.flags.svg}
-                    style={{
-                      objectFit: "cover",
-                      minHeight: "200px",
-                      maxHeight: "200px",
-                    }}
-                  />
-                </Link>
-                <Card.Body className="d-flex flex-column">
-                  <FavoriteIcon
-                    color="red"
-                    onClick={() => dispatch(addFavourite(country.name.common))}
-                  />
-                  <Card.Title>{country.name.common}</Card.Title>
-                  <Card.Subtitle className="mb-5 text-muted">
-                    {country.name.official}
-                  </Card.Subtitle>
-                  <ListGroup
-                    variant="flush"
-                    className="flex-grow-1 justify-content-end"
-                  >
-                    <ListGroup.Item>
-                      <i className="bi bi-translate me-2"></i>
-                      {Object.values(country.languages ?? {}).join(', ')}
-                    </ListGroup.Item>
-                    <ListGroup.Item>
-                      <i className="bi bi-cash-coin me-2"></i>
-                      {Object.values(country.currencies || {})
-                        .map((currency) => currency.name)
-                        .join(", ")}
-                    </ListGroup.Item>
-                    <ListGroup.Item>
-                      <i className="bi bi-people me-2"></i>
-                      {country.population.toLocaleString()}
-                    </ListGroup.Item>
-                  </ListGroup>
-                </Card.Body>
-              </Card>
-            </Col>
+            <Grid item xs="auto" sm="auto" style={{
+              height: "520px",
+              width: "340px",
+            }} key={country.name.official} >
+              <CountryCard country={country} />
+            </Grid>
           ))}
-      </Row>
+      </Grid>
+      <a href="https://www.freepik.com/free-photo/storm-clouds_1173083.htm#query=black%20white%20clouds&position=49&from_view=keyword&track=ais&uuid=2e916465-b14f-4fe1-b578-80b362d59ccc">Image by freestockcenter</a>
     </Container>
   );
 };

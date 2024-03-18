@@ -1,3 +1,22 @@
+# Countries
+
+## Joona Aronen version
+
+   ### Countries.jsx
+   - I changed this page to have a grid and the cards are of a certain size so the cards won't shrink when the device width changes.
+   ### Favourites.jsx
+   - Similar grid change here too.
+   - In favourites you can delete one or all of the favourites. If you choose to clear all of them an Alert will appear to ask if you are sure. Press the button again and it will delete them.
+      - If there is no favourites it will return an error Alert.
+      - The user has 4 s to click the button again to be able to clear favourites. And when deleted after 2s the Alert succesfully deleted will disappear
+   ### CountryCard.jsx
+   - Moved card inside CountryCard to be able to change the favouriteIcon and have the hoverEffect in a single card only
+   ### firebase.js
+   - Here we have a bit different version. I wanted to have the favourites collection inside of the "users" with the uid of the user being the same as the document id. So the data we create in the user registration is there but also a "favourites" collection containing all the country names.
+   - Also the user authentication data is not passed to firebase.js. It is taken as a const in each function. Don't know if this is best practice in anyway but that's how it is in my version.
+   
+   That's about it. I used some of the time available strugling with some of the firebase functions not realising they we're available in the example project. And just now in the end I started to learn how to deal with mui and making those small changes. Fun project. Will continue later.
+
 ## Begin Countries Application setup...
 
 ### Steps:

@@ -1,8 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { doc, addDoc, setDoc, collection, getFirestore, updateDoc, getDocs, query, getDoc, deleteDoc } from "firebase/firestore"
-import { useSelector } from "react-redux";
+import { doc, addDoc, setDoc, collection, getFirestore, getDocs, deleteDoc } from "firebase/firestore"
 import { getFavourites } from "../store/favouritesSlice"
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -37,8 +36,6 @@ const registerWithEmailAndPassword = async (name, email, password) => {
         });
 
         const favCollection = collection(newUserRef, "favourites");
-        await addDoc(favCollection, {});
-
         console.log("User registered successfully:", user);
     } catch (error) {
         console.error("Error registering user:", error);
@@ -69,26 +66,20 @@ export const getUserFavourites = () => async (dispatch) => {
 
 export const deleteUserFavourite = async (parameter) => {
     const uid = auth.currentUser.uid;
-    const userDoc = doc(db, "users", uid);
-    const favCollection = collection(userDoc, "favourites");
+    const favCollection = collection(db, "users", uid, "favourites");
     try {
         if (!parameter) {
             console.error("Error removing favourite from Firebase database: name parameter is undefined");
             return;
         }
-        const userSnapShot = await getDoc(userDoc);
-        if (userSnapShot.exists()) {
-            const favSnapshot = await getDocs(favCollection);
-            favSnapshot.forEach((doc) => {
-                const favouriteData = doc.data();
-                console.log(favouriteData, parameter);
-                if (favouriteData.name === parameter) {
-                    console.log('Deleted', favouriteData);
-                    deleteDoc(doc.ref);
-                }
-            })
-        }
-        else console.error("no user data found with uid", uid)
+        const favSnapshot = await getDocs(favCollection);
+        favSnapshot.forEach((doc) => {
+            const favouriteData = doc.data();
+            if (favouriteData.name === parameter) {
+                console.log('Deleted', favouriteData);
+                deleteDoc(doc.ref);
+            }
+        })
     }
     catch (error) {
         console.error("Error removing favourite from Firebase database: ", error);
@@ -123,18 +114,5 @@ export const logout = () => {
     auth.signOut()
 };
 
-export const getNameOfUser = async (user) => {
-    if (user) {
-        const q = query(collection(db, "users"), where("uid", "==", user.uid));
-        const querySnapshot = await getDocs(q);
-        querySnapshot.forEach((doc) => {
-            const name = doc.data().name;
-            console.log("name from getNameOfuser: ", name);
-            return name;
-        });
-    } else {
-        return null;
-    }
-}
 
 export { auth, db, registerWithEmailAndPassword };
