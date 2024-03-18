@@ -7,14 +7,12 @@ import { Link } from "react-router-dom";
 import { db, logout } from "../auth/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../auth/firebase";
-import { Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { collection, getDocs, query, where } from "firebase/firestore";
 
 const Header = () => {
   const [user] = useAuthState(auth);
   const [name, setName] = useState("user");
-  const [message, setMessage] = useState("Welcome")
 
   useEffect(() => {
     const getUserData = async () => {

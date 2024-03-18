@@ -1,27 +1,41 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
-import Card from "react-bootstrap/Card";
-import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
-import ListGroup from "react-bootstrap/ListGroup";
-import Row from "react-bootstrap/Row";
-import HeartBrokenIcon from '@mui/icons-material/HeartBroken';
 import { useDispatch, useSelector } from "react-redux";
 import { initializeCountries } from "../store/countriesSlice";
-import { removeOneFavourite, clearFavourites } from "../store/favouritesSlice";
+import { clearFavourites } from "../store/favouritesSlice";
 import { getUserFavourites } from "../auth/firebase";
-import { Link } from "react-router-dom";
+import { Alert, Grid } from "@mui/material";
+import CountryCard from "../components/CountryCard";
 
 const Favourites = () => {
     const dispatch = useDispatch();
-
-    /* const handleRemoveFavourite = () => {
-        dispatch(removeOneFavourite(country.name.common))
-    } */
+    const [bool, setBool] = useState(false);
+    const [deleted, setDeleted] = useState(false);
+    const [noFav, setNoFav] = useState(false);
 
     const removeAllFavourites = () => {
-        dispatch(clearFavourites());
+        if (deleted) {
+            return;
+        }
+        if (favourites.length === 0) {
+            setNoFav(true);
+            setTimeout(() => setNoFav(false), 2000);
+            return;
+        }
+        if (bool) {
+            dispatch(clearFavourites());
+            setBool(false);
+            setDeleted(true);
+            setTimeout(() => setDeleted(false), 2000);
+            return;
+        }
+        else {
+            setBool(true);
+            setTimeout(() => setBool(false), 4000)
+        }
     }
+
     const favourites = useSelector((state) => state.favourites.favourites);
     let countriesList = useSelector((state) => state.countries.countries);
 
@@ -32,7 +46,6 @@ const Favourites = () => {
     } else {
         countriesList = [];
     }
-
     // TODO: Implement logic to retrieve favourites later.
     useEffect(() => {
         dispatch(initializeCountries());
@@ -41,58 +54,31 @@ const Favourites = () => {
 
     return (
         <Container fluid>
-            <Button onClick={() => dispatch(removeAllFavourites())}>Clear Favourites</Button>
-            <Row xs={2} md={3} lg={4} className=" g-3">
+            <Container style={{
+                display: "flex",
+                justifyContent: "space-between",
+                margin: "10px"
+            }}>
+
+                <Button onClick={removeAllFavourites}>Clear Favourites</Button>
+                {bool && <Alert severity="warning">Are you sure you want to clear favourites? Click again to delete</Alert>}
+                {deleted && <Alert severity="success">Favourites deleted succesfully</Alert>}
+                {noFav && <Alert severity="error">Error, No favourites to delete</Alert>}
+            </Container>
+            <Grid container spacing={3} style={{
+                display: "flex",
+                justifyContent: "flex-start"
+            }}>
                 {countriesList.map((country) => (
-                    <Col key={country.name.official} className="mt-5">
-                        <Card className="h-100">
-                            <Link
-                                to={`/countries/${country.name.common}`}
-                                state={{ country: country }}
-                            >
-                                <Card.Img
-                                    variant="top"
-                                    className="rounded h-50"
-                                    src={country.flags.svg}
-                                    style={{
-                                        objectFit: "cover",
-                                        minHeight: "200px",
-                                        maxHeight: "200px",
-                                    }}
-                                />
-                            </Link>
-                            <Card.Body className="d-flex flex-column">
-                                <HeartBrokenIcon
-                                    color="red"
-                                    onClick={() => dispatch(removeOneFavourite(country.name.common))} />
-                                <Card.Title>{country.name.common}</Card.Title>
-                                <Card.Subtitle className="mb-5 text-muted">
-                                    {country.name.official}
-                                </Card.Subtitle>
-                                <ListGroup
-                                    variant="flush"
-                                    className="flex-grow-1 justify-content-end"
-                                >
-                                    <ListGroup.Item>
-                                        <i className="bi bi-translate me-2"></i>
-                                        {Object.values(country.languages ?? {}).join(", ")}
-                                    </ListGroup.Item>
-                                    <ListGroup.Item>
-                                        <i className="bi bi-cash-coin me-2"></i>
-                                        {Object.values(country.currencies || {})
-                                            .map((currency) => currency.name)
-                                            .join(", ")}
-                                    </ListGroup.Item>
-                                    <ListGroup.Item>
-                                        {country.population.toLocaleString()}
-                                    </ListGroup.Item>
-                                </ListGroup>
-                            </Card.Body>
-                        </Card>
-                    </Col>
+                    <Grid item xs="auto" sm="auto" style={{
+                        height: "520px",
+                        width: "340px"
+                    }} key={country.name.official} >
+                        <CountryCard country={country} />
+                    </Grid>
                 ))}
-            </Row>
-        </Container>
+            </Grid>
+        </Container >
     );
 };
 

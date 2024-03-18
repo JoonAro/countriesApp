@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addUserFavourite, deleteUserFavourite } from "../auth/firebase";
+import { addUserFavourite, clearUserFavourites, deleteUserFavourite } from "../auth/firebase";
 
 export const favouritesSlice = createSlice({
     name: "favourites",
@@ -23,13 +23,15 @@ export const favouritesSlice = createSlice({
             addUserFavourite(action.payload);
 
         },
-        clearFavourites(state, action) {
+        clearFavourites(state) {
             state.favourites = [];
+            clearUserFavourites();
         },
         removeOneFavourite(state, action) {
+            const newArray = [...state.favourites];
             const favourite = action.payload;
-            const index = state.favourites.findIndex((fav) => fav === favourite);
-            //state.favourites.splice(index, 1);
+            newArray.splice(newArray.findIndex((e) => e === action.payload), 1)
+            state.favourites = [...newArray];
             deleteUserFavourite(favourite);
         },
     },
