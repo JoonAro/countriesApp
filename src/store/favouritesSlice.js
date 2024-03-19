@@ -7,6 +7,9 @@ export const favouritesSlice = createSlice({
         favourites: [],
     },
     reducers: {
+        getFavourites(state, action) {
+            state.favourites = action.payload;
+        },
         addFavourite(state, action) {
             const user = auth.currentUser;
             if (state.favourites.some((favourite) => favourite === action.payload))
