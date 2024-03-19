@@ -1,5 +1,5 @@
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import HeartBrokenIcon from '@mui/icons-material/HeartBroken';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import Card from "react-bootstrap/Card";
 import ListGroup from "react-bootstrap/ListGroup";
 import { addFavourite, removeOneFavourite } from "../store/favouritesSlice";
@@ -42,7 +42,7 @@ const CountryCard = ({ country }) => {
                 />
             </Link>
             <Card.Body className="d-flex flex-column">
-                {favourites.includes(country.name.common) ? < HeartBrokenIcon style={{
+                {favourites.includes(country.name.common) ? < FavoriteIcon style={{
                     transform: `Scale(${isHovered ? 1.2 : 1})`,
                     transition: 'transform 0.3s'
                 }}
@@ -50,7 +50,7 @@ const CountryCard = ({ country }) => {
                     onMouseLeave={handleMouseLeave}
                     color="red"
                     onClick={handleDeleteFavourite} />
-                    : <FavoriteIcon
+                    : <FavoriteBorderIcon
                         style={{
                             transform: `Scale(${isHovered ? 1.2 : 1})`,
                             transition: 'transform 0.3s'

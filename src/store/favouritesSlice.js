@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addUserFavourite, clearUserFavourites, deleteUserFavourite } from "../auth/firebase";
+import { addUserFavourite, auth, clearUserFavourites, deleteUserFavourite } from "../auth/firebase";
 
 export const favouritesSlice = createSlice({
     name: "favourites",
@@ -7,32 +7,32 @@ export const favouritesSlice = createSlice({
         favourites: [],
     },
     reducers: {
-        getFavourites(state, action) {
-            state.favourites = action.payload;
-        },
-        /* addFavourite(state, action) {
-            if (state.favourites.some((favourite) => favourite.name.common === action.payload.name.common))
-                return;
-            state.favourites = [...state.favourites, action.payload];
-            console.log(state.favourites);
-        }, */
         addFavourite(state, action) {
+            const user = auth.currentUser;
             if (state.favourites.some((favourite) => favourite === action.payload))
                 return;
             state.favourites = [...state.favourites, action.payload];
-            addUserFavourite(action.payload);
+            if (user) {
+                addUserFavourite(action.payload, user.uid);
+            }
 
         },
         clearFavourites(state) {
+            const user = auth.currentUser;
             state.favourites = [];
-            clearUserFavourites();
+            if (user) {
+                clearUserFavourites(user.uid);
+            }
         },
         removeOneFavourite(state, action) {
+            const user = auth.currentUser;
             const newArray = [...state.favourites];
             const favourite = action.payload;
             newArray.splice(newArray.findIndex((e) => e === action.payload), 1)
             state.favourites = [...newArray];
-            deleteUserFavourite(favourite);
+            if (user) {
+                deleteUserFavourite(favourite, user.uid);
+            }
         },
     },
 });

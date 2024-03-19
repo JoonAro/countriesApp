@@ -43,8 +43,7 @@ const registerWithEmailAndPassword = async (name, email, password) => {
     }
 };
 
-export const addUserFavourite = async (name) => {
-    const uid = auth.currentUser.uid;
+export const addUserFavourite = async (name, uid) => {
     const favouritesCollection = collection(db, "users", uid, "favourites");
     try {
         await addDoc(favouritesCollection, { name });
@@ -64,8 +63,7 @@ export const getUserFavourites = () => async (dispatch) => {
     }
 };
 
-export const deleteUserFavourite = async (parameter) => {
-    const uid = auth.currentUser.uid;
+export const deleteUserFavourite = async (parameter, uid) => {
     const favCollection = collection(db, "users", uid, "favourites");
     try {
         if (!parameter) {
@@ -86,8 +84,7 @@ export const deleteUserFavourite = async (parameter) => {
     }
 };
 
-export const clearUserFavourites = async () => {
-    const uid = auth.currentUser.uid;
+export const clearUserFavourites = async (uid) => {
     const favCollection = collection(db, "users", uid, "favourites");
     try {
         const favSnapshot = await getDocs(favCollection);
