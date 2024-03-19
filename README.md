@@ -13,7 +13,6 @@
    - Moved card inside CountryCard to be able to change the favouriteIcon and have the hoverEffect in a single card only
    ### firebase.js
    - Here we have a bit different version. I wanted to have the favourites collection inside of the "users" with the uid of the user being the same as the document id. So the data we create in the user registration is there but also a "favourites" collection containing all the country names.
-   - Also the user authentication data is not passed to firebase.js. It is taken as a const in each function. Don't know if this is best practice in anyway but that's how it is in my version.
    
    That's about it. I used some of the time available strugling with some of the firebase functions not realising they we're available in the example project. And just now in the end I started to learn how to deal with mui and making those small changes. Fun project. Will continue later.
 
